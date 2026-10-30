@@ -1,0 +1,343 @@
+{
+  "src": "D:\\00. AI学习\\03. AI写程序\\写好的程序\\45. 辽河能碳管理系统\\2026.10.10 上传版本\\index.html",
+  "url": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/index.html",
+  "outdir": "D:\\00. AI学习\\03. AI写程序\\写好的程序\\45. 辽河能碳管理系统\\2026.10.10 上传版本\\_shots",
+  "include": [
+    "lint",
+    "screenshots",
+    "structure"
+  ],
+  "shots": {
+    "desktop": {
+      "screenshot": "D:\\00. AI学习\\03. AI写程序\\写好的程序\\45. 辽河能碳管理系统\\2026.10.10 上传版本\\_shots\\index_desktop.jpg",
+      "screenshotBytes": 49695,
+      "truncated": false,
+      "structure": {
+        "title": "辽河能碳管理系统 11.0 - 沈阳市辽河特种玻璃厂",
+        "firstH1": "辽河能碳管理系统",
+        "viewport": {
+          "w": 1424,
+          "h": 749
+        },
+        "fullpage": {
+          "w": 1424,
+          "h": 811
+        },
+        "counts": {
+          "section": 0,
+          "h1": 1,
+          "h2": 27,
+          "img": 0,
+          "canvas": 18,
+          "svg": 1,
+          "links": 25,
+          "buttons": 23
+        }
+      },
+      "consoleErrors": [
+        {
+          "type": "error",
+          "text": "Access to manifest at 'file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/manifest.json' from origin '",
+          "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/index.html"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: net::ERR_FAILED",
+          "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/manifest.json"
+        },
+        {
+          "type": "error",
+          "text": "Access to fetch at 'file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/data.json' from origin 'null' h",
+          "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/index.html"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: net::ERR_FAILED",
+          "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/data.json"
+        }
+      ],
+      "consoleWarnings": [
+        {
+          "type": "warning",
+          "text": "cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation",
+          "location": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "type": "warning",
+          "text": "data.json 加载失败（本地打开或离线），使用本地数据: TypeError: Failed to fetch\n    at loadData (file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4",
+          "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/index.html"
+        },
+        {
+          "type": "warning",
+          "text": "SW注册失败: TypeError: Failed to register a ServiceWorker: The URL protocol of the current origin ('null') is not supported.\n    at file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%",
+          "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/index.html"
+        }
+      ],
+      "horizontalOverflow": [],
+      "resourceErrors": [
+        {
+          "url": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2",
+          "resourceType": "Manifest",
+          "status": null,
+          "reason": "network_error"
+        },
+        {
+          "url": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2",
+          "resourceType": "Fetch",
+          "status": null,
+          "reason": "network_error"
+        }
+      ],
+      "faviconWarning": {
+        "present": true,
+        "count": 2,
+        "externalRefs": [
+          "icons/icon-192.png",
+          "icons/icon-192.png"
+        ],
+        "unencodedHash": []
+      },
+      "faviconHint": "warning · 含义：favicon 指向了外部文件（见 externalRefs），不是 data URI。 | 修法：用**内联 SVG data URI**，一行搞定、零额外文件：`<link rel=\"icon\" type=\"image/svg+xml\" href=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230F766E'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white'%3EA%3C/text%3E%3C/svg%3E\">`。图形取产物主题里的一个符号（首字母、核心图标、品牌形状），配色沿用页面主色，别用无关的通用图标。 | **三个必须注意的编码细节**：外层 href 用双引号、SVG 内部属性用单引号；`<` `>` 写成 `%3C` `%3E`；**颜色的 `#` 必须写成 `%23`**——不编码会被当成 URL fragment，图标直接不显示。想做深浅色两版就写两个 link，加 `media=\"(prefers-color-scheme: dark)\"`。 | 为什么只能用 data URI：`link href` **不在发布链路的资源收集白名单里**（那里只认 `src` 属性和 CSS `url()`），指向 `assets/` 的图标文件发布后必然 404；而且额外文件破坏单文件自包含，用户拿到一个 html 就该能用。 | 会不会被平台图标覆盖：不会。发布平台把自己的默认 favicon 注入在 `<head>` 最前面，浏览器对多个 icon link **取最后一个**，模型写在后面的那个生效。 | 豁免：(1) 产物是页面片段（没有完整 `<head>`）时不适用；(2) externalRefs 指向 CDN 域名（`lf3-static.bytednsdoc.com` 之类）时，那是**发布平台注入的**默认图标，不是你写的——迭代已发布产物时会看到，忽略即可，自己另加一个 data URI 的 link 就行（浏览器对多个 icon link 取最后一个）。",
+      "reportSource": "cdp"
+    }
+  },
+  "engine": "chrome_cli",
+  "chromiumExec": "C:\\Users\\Administrator\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe",
+  "engineDegraded": true,
+  "engineDegradedReason": "playwright 未装",
+  "publishBrokenAssets": [
+    {
+      "file": "icons\\icon-192.png",
+      "reason": "non-src-attr:href",
+      "severity": "error",
+      "loadedAtRuntime": false,
+      "onDisk": true
+    }
+  ],
+  "publishBrokenAssetsHint": "含义：发布链路靠静态扫描 HTML 源码决定上传哪些图片文件，**只认 `src` 属性和 CSS `url()` 两个位置**（线上实测）。写在别处的路径不会被上传，发布后 404 裂图。本地打开和自检截图都看不出来——文件真实存在，浏览器照样加载。 | severity=error 的逐条改，改法都是同一个：把路径挪到 `<img src=\"assets/x.png\">` 或 CSS `url('assets/x.png')`。reason=js-literal 路径写在 JS 字符串里（`const g=['assets/x.png']` 这种常量数组也算，照样裂）；reason=js-concat 路径由 JS 拼接（`'assets/img'+i+'.png'`）；reason=non-src-attr 路径写在 `data-src`、`srcset`、`poster` 等非 `src` 属性上——**这类即便静态写在 HTML 属性里也会裂**，懒加载写法要在 `src` 上放真实路径。 | severity=warning（reason=unreferenced-file）是提醒不是错误：`assets/` 里有这个文件，但源码和运行时都没引用到它。可能是没用上的多余素材（删掉即可），也可能是路径拼接且当前视口没渲染到的图（那就是会裂的，按 error 处理）。**这一条只在本地电脑（macOS / Windows）检测**——云电脑图片走 `lark-cli drive +html-image-upload`，HTML 引用外链、`assets/` 里的原图本就该保留且不被引用，在那儿报是纯误报，所以直接不报；**别因为这条去删云电脑上的原图**。自行判断，别的规则不受它影响。",
+  "elapsedSec": 34.8,
+  "schemaVersion": 2,
+  "status": "fail",
+  "engineInfo": {
+    "name": "chrome_cli",
+    "degraded": true,
+    "degradedReasons": [
+      "playwright 未装"
+    ]
+  },
+  "input": {
+    "original": "D:\\00. AI学习\\03. AI写程序\\写好的程序\\45. 辽河能碳管理系统\\2026.10.10 上传版本\\index.html",
+    "resolvedPath": "D:\\00. AI学习\\03. AI写程序\\写好的程序\\45. 辽河能碳管理系统\\2026.10.10 上传版本\\index.html",
+    "baseUrl": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/index.html",
+    "protocol": "file",
+    "cwd": "C:\\Users\\Administrator\\Doubao\\chats\\2026-10-10\\new-chat-2",
+    "mediaMode": {
+      "reducedMotion": true
+    }
+  },
+  "artifacts": {
+    "screenshots": [
+      {
+        "viewport": "desktop",
+        "path": "D:\\00. AI学习\\03. AI写程序\\写好的程序\\45. 辽河能碳管理系统\\2026.10.10 上传版本\\_shots\\index_desktop.jpg",
+        "size": 49695,
+        "visualCoverage": {
+          "complete": true,
+          "reason": null
+        }
+      }
+    ]
+  },
+  "summary": {
+    "blocker": 0,
+    "error": 7,
+    "warning": 4,
+    "info": 0
+  },
+  "findings": [
+    {
+      "ruleId": "consoleErrors",
+      "severity": "error",
+      "kind": "console",
+      "viewport": "desktop",
+      "selector": null,
+      "evidence": {
+        "type": "error",
+        "text": "Access to manifest at 'file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/manifest.json' from origin '",
+        "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/index.html"
+      },
+      "dedupeKey": "consoleErrors|desktop||0"
+    },
+    {
+      "ruleId": "consoleErrors",
+      "severity": "error",
+      "kind": "console",
+      "viewport": "desktop",
+      "selector": null,
+      "evidence": {
+        "type": "error",
+        "text": "Failed to load resource: net::ERR_FAILED",
+        "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/manifest.json"
+      },
+      "dedupeKey": "consoleErrors|desktop||1"
+    },
+    {
+      "ruleId": "consoleErrors",
+      "severity": "error",
+      "kind": "console",
+      "viewport": "desktop",
+      "selector": null,
+      "evidence": {
+        "type": "error",
+        "text": "Access to fetch at 'file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/data.json' from origin 'null' h",
+        "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/index.html"
+      },
+      "dedupeKey": "consoleErrors|desktop||2"
+    },
+    {
+      "ruleId": "consoleErrors",
+      "severity": "error",
+      "kind": "console",
+      "viewport": "desktop",
+      "selector": null,
+      "evidence": {
+        "type": "error",
+        "text": "Failed to load resource: net::ERR_FAILED",
+        "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/data.json"
+      },
+      "dedupeKey": "consoleErrors|desktop||3"
+    },
+    {
+      "ruleId": "consoleWarnings",
+      "severity": "warning",
+      "kind": "console",
+      "viewport": "desktop",
+      "selector": null,
+      "evidence": {
+        "type": "warning",
+        "text": "cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation",
+        "location": "https://cdn.tailwindcss.com/"
+      },
+      "dedupeKey": "consoleWarnings|desktop||0"
+    },
+    {
+      "ruleId": "consoleWarnings",
+      "severity": "warning",
+      "kind": "console",
+      "viewport": "desktop",
+      "selector": null,
+      "evidence": {
+        "type": "warning",
+        "text": "data.json 加载失败（本地打开或离线），使用本地数据: TypeError: Failed to fetch\n    at loadData (file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4",
+        "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/index.html"
+      },
+      "dedupeKey": "consoleWarnings|desktop||1"
+    },
+    {
+      "ruleId": "consoleWarnings",
+      "severity": "warning",
+      "kind": "console",
+      "viewport": "desktop",
+      "selector": null,
+      "evidence": {
+        "type": "warning",
+        "text": "SW注册失败: TypeError: Failed to register a ServiceWorker: The URL protocol of the current origin ('null') is not supported.\n    at file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%",
+        "location": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2026.10.10%20%E4%B8%8A%E4%BC%A0%E7%89%88%E6%9C%AC/index.html"
+      },
+      "dedupeKey": "consoleWarnings|desktop||2"
+    },
+    {
+      "ruleId": "resourceErrors",
+      "severity": "error",
+      "kind": "network",
+      "viewport": "desktop",
+      "selector": null,
+      "evidence": {
+        "url": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2",
+        "resourceType": "Manifest",
+        "status": null,
+        "reason": "network_error"
+      },
+      "dedupeKey": "resourceErrors|desktop||0"
+    },
+    {
+      "ruleId": "resourceErrors",
+      "severity": "error",
+      "kind": "network",
+      "viewport": "desktop",
+      "selector": null,
+      "evidence": {
+        "url": "file:///D:/00.%20AI%E5%AD%A6%E4%B9%A0/03.%20AI%E5%86%99%E7%A8%8B%E5%BA%8F/%E5%86%99%E5%A5%BD%E7%9A%84%E7%A8%8B%E5%BA%8F/45.%20%E8%BE%BD%E6%B2%B3%E8%83%BD%E7%A2%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/2",
+        "resourceType": "Fetch",
+        "status": null,
+        "reason": "network_error"
+      },
+      "dedupeKey": "resourceErrors|desktop||1"
+    },
+    {
+      "ruleId": "faviconWarning",
+      "severity": "warning",
+      "kind": "metadata",
+      "viewport": "desktop",
+      "selector": null,
+      "evidence": {
+        "present": true,
+        "count": 2,
+        "externalRefs": [
+          "icons/icon-192.png",
+          "icons/icon-192.png"
+        ],
+        "unencodedHash": []
+      },
+      "dedupeKey": "faviconWarning|desktop||0"
+    },
+    {
+      "ruleId": "publishBrokenAssets",
+      "severity": "error",
+      "kind": "publish",
+      "viewport": null,
+      "selector": null,
+      "evidence": {
+        "file": "icons\\icon-192.png",
+        "reason": "non-src-attr:href",
+        "severity": "error",
+        "loadedAtRuntime": false,
+        "onDisk": true
+      },
+      "dedupeKey": "publishBrokenAssets|top||0"
+    }
+  ],
+  "prioritizedActions": [
+    {
+      "ruleId": "consoleErrors",
+      "severity": "error",
+      "viewport": "desktop",
+      "selector": null
+    },
+    {
+      "ruleId": "resourceErrors",
+      "severity": "error",
+      "viewport": "desktop",
+      "selector": null
+    },
+    {
+      "ruleId": "publishBrokenAssets",
+      "severity": "error",
+      "viewport": null,
+      "selector": null
+    },
+    {
+      "ruleId": "consoleWarnings",
+      "severity": "warning",
+      "viewport": "desktop",
+      "selector": null
+    },
+    {
+      "ruleId": "faviconWarning",
+      "severity": "warning",
+      "viewport": "desktop",
+      "selector": null
+    }
+  ],
+  "reportPath": "D:\\00. AI学习\\03. AI写程序\\写好的程序\\45. 辽河能碳管理系统\\2026.10.10 上传版本\\_shots\\report.json"
+}

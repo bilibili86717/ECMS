@@ -693,7 +693,7 @@
                                     <tr>
                                         <td class="px-4 py-3 text-gray-800 dark:text-gray-200"><i class="fas fa-bolt text-yellow-500 mr-2"></i>电力</td>
                                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400">MWh</td>
-                                        <td class="px-4 py-3 font-semibold text-danger">0.5810</td>
+                                        <td class="px-4 py-3 font-semibold text-danger">0.6096</td>
                                         <td class="px-4 py-3 text-gray-600 dark:text-gray-400">tCO₂/MWh</td>
                                     </tr>
                                     <tr class="bg-green-50 dark:bg-green-900/20">
@@ -736,15 +736,15 @@
                         <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                             <h4 class="font-semibold text-gray-800 dark:text-white mb-2">碳排放计算</h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 font-mono">
-                                总碳排放 = 购入电力×0.581（绿电不计入）<br>
-                                2025年度：605.983 tCO₂<br>
+                                总碳排放 = 购入电力×0.6096（绿电不计入）<br>
+                                2025年度：635.813 tCO₂<br>
                                 天然气/汽油排放见产品碳足迹模块Scope1
                             </p>
                         </div>
                         <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                             <h4 class="font-semibold text-greenEnergy mb-2">绿电减排量</h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 font-mono">
-                                绿电减排量 = 光伏绿电 × 0.581
+                                绿电减排量 = 光伏绿电 × 0.6096
                             </p>
                         </div>
                         <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -778,7 +778,7 @@
                                 </div>
                                 <div class="flex justify-between items-center mb-2">
                                     <span class="text-gray-700 dark:text-gray-300">排放因子</span>
-                                    <span class="font-semibold text-gray-800 dark:text-white">0.581 tCO₂/MWh</span>
+                                    <span class="font-semibold text-gray-800 dark:text-white">0.6096 tCO₂/MWh</span>
                                 </div>
                                 <div class="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
                                     <div class="flex justify-between items-center">
@@ -1912,7 +1912,7 @@
                                 <span class="font-semibold text-gray-800 dark:text-white">阶段小计</span>
                                 <span class="font-bold text-red-600" id="cf-prodTotal">0.00 tCO₂</span>
                             </div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2"><i class="fas fa-tag mr-1"></i>数据来源：电力/天然气来自数据输入，电网因子0.581 tCO₂/MWh</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2"><i class="fas fa-tag mr-1"></i>数据来源：电力/天然气来自数据输入，全国平均电力排放因子0.6096 tCO₂/MWh</p>
                         </div>
                     </div>
                 </div>
@@ -2732,7 +2732,7 @@
 
         // ======== 碳排放因子 ========
         const CARBON_FACTORS = {
-            gridPower: 0.5810,      // tCO₂/MWh（东北电网2022年因子）
+            gridPower: 0.6096,      // tCO₂/MWh（全国电力平均排放因子，2023年度，不含市场化交易非化石能源电量）
             naturalGas: 2.1600,     // tCO₂/万m³（天然气，国家发改委清单指南）
             gasoline: 2.9250        // tCO₂/吨（汽油，IPCC/国家清单）
         };
@@ -3000,8 +3000,8 @@
                    (data.gasoline || 0) * CONVERSION_FACTORS.gasoline;
         }
 
-        // 计算碳排放（口径：购入电力×0.581；光伏绿电单独计减排。
-        // 天然气/汽油排放见产品碳足迹模块Scope1，不计入总量——与温室气体排放报告605.983 tCO₂一致）
+        // 计算碳排放（口径：购入电力×0.6096；光伏绿电单独计减排。
+        // 天然气/汽油排放见产品碳足迹模块Scope1，不计入总量——与温室气体排放报告635.813 tCO₂一致）
         function calcTotalCarbon(data) {
             return (data.gridPower || 0) * CARBON_FACTORS.gridPower;
         }
@@ -3200,7 +3200,7 @@ try { updateCharts(); } catch(e) { console.warn('图表更新失败:', e); }
                 advices.push({
                     level: 'high', icon: 'fa-solar-panel', title: '扩大光伏发电规模',
                     desc: `当前光伏绿电占总用电量的${solarRatio.toFixed(1)}%，低于20%。建议扩大光伏装机容量，每增加100MWh光伏发电可减少约58.1 tCO₂排放，年节约电费约5万元。`,
-                    impact: `预计年减排：${(100 * 0.581).toFixed(1)} tCO₂`
+                    impact: `预计年减排：${(100 * 0.6096).toFixed(1)} tCO₂`
                 });
             } else {
                 advices.push({
@@ -3640,7 +3640,7 @@ function exportCSV() {
                 let html = '';
                 monthlyData.forEach((data, index) => {
                     const actualEnergy = data.gridPower + data.solarPower;
-                    const actualCarbon = data.gridPower * 0.581;
+                    const actualCarbon = data.gridPower * CARBON_FACTORS.gridPower;
                     const energyPercent = (actualEnergy / monthlyEnergyBudget * 100).toFixed(1);
                     const carbonPercent = (actualCarbon / monthlyCarbonBudget * 100).toFixed(1);
                     
@@ -4749,7 +4749,7 @@ function exportCSV() {
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">次级数据（官方）</td><td style="padding:6px 8px;border:1px solid #999;">天然气排放因子</td><td style="padding:6px 8px;border:1px solid #999;">IPCC/国家指南 2.16 tCO₂/万m³</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">高质量</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">次级数据（官方）</td><td style="padding:6px 8px;border:1px solid #999;">汽油排放因子</td><td style="padding:6px 8px;border:1px solid #999;">IPCC/国家指南 2.925 tCO₂/吨</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">高质量</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">次级数据（数据库）</td><td style="padding:6px 8px;border:1px solid #999;">公路运输排放因子</td><td style="padding:6px 8px;border:1px solid #999;">IPCC默认值 0.115 kgCO₂/(吨·km)</td><td style="padding:6px 8px;border:1px solid #999;color:#f59e0b;">良好</td></tr>
-                                <tr><td style="padding:6px 8px;border:1px solid #999;">次级数据（官方）</td><td style="padding:6px 8px;border:1px solid #999;">电力排放因子</td><td style="padding:6px 8px;border:1px solid #999;">国家发改委东北电网 0.581 tCO₂/MWh</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">高质量</td></tr>
+                                <tr><td style="padding:6px 8px;border:1px solid #999;">次级数据（官方）</td><td style="padding:6px 8px;border:1px solid #999;">电力排放因子</td><td style="padding:6px 8px;border:1px solid #999;">全国电力平均排放因子 0.6096 tCO₂/MWh（生态环境部/国家统计局）</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">高质量</td></tr>
                             </tbody>
                         </table>
                         <p style="font-size:11px;color:#555;margin:6px 0;"><strong>时间代表性：</strong>初级数据为${CF_BASE_DATA.companyInfo.reportPeriod}年度实测数据；次级数据来自近年发布的中国本土数据库，时间代表性良好。<br><strong>地域代表性：</strong>电力因子采用东北区域电网值；原片因子采用中国本土生命周期数据库（CLCD），地域代表性良好。<br><strong>技术代表性：</strong>所采用技术均反映浮法玻璃及玻璃深加工行业当前主流技术水平。</p>
@@ -4834,7 +4834,7 @@ function exportCSV() {
                         <h3 style="font-size:14px;font-weight:bold;color:#1e3a8a;margin:20px 0 10px;padding:6px 10px;background:#eff6ff;border-left:4px solid #1e40af;">11. 附录</h3>
                         <p style="font-size:11px;margin:6px 0;"><strong>附录A：排放因子来源</strong></p>
                         <ul style="font-size:11px;color:#555;margin:4px 0;padding-left:20px;">
-                            <li>电力排放因子：国家发改委《中国区域电网基准线排放因子》东北区域电网0.581 tCO₂/MWh</li>
+                            <li>电力排放因子：全国电力平均CO₂排放因子（不含市场化交易非化石能源电量，生态环境部/国家统计局2023年度发布）0.6096 tCO₂/MWh</li>
                             <li>天然气排放因子：IPCC国家温室气体清单指南/省级温室气体编制指南 2.16 tCO₂/万m³</li>
                             <li>汽油排放因子：IPCC国家温室气体清单指南/省级温室气体编制指南 2.925 tCO₂/吨</li>
                             <li>浮法玻璃原片：中国生命周期基础数据库（CLCD），0.82 tCO₂/吨</li>
@@ -4973,7 +4973,7 @@ function exportCSV() {
                         <table style="width:100%;border-collapse:collapse;font-size:11px;">
                             <thead><tr style="background:#4b5563;color:white;"><th style="padding:6px 8px;border:1px solid #555;">能源类型</th><th style="padding:6px 8px;border:1px solid #555;">折标准煤系数</th><th style="padding:6px 8px;border:1px solid #555;">碳排放因子</th><th style="padding:6px 8px;border:1px solid #555;">来源</th></tr></thead>
                             <tbody>
-                                <tr><td style="padding:5px 8px;border:1px solid #ccc;">电力（当量值）</td><td style="padding:5px 8px;border:1px solid #ccc;">0.1229 kgce/kWh</td><td style="padding:5px 8px;border:1px solid #ccc;">0.5810 tCO₂/MWh</td><td style="padding:5px 8px;border:1px solid #ccc;">GB/T 2589-2020 / 东北电网因子</td></tr>
+                                <tr><td style="padding:5px 8px;border:1px solid #ccc;">电力（当量值）</td><td style="padding:5px 8px;border:1px solid #ccc;">0.1229 kgce/kWh</td><td style="padding:5px 8px;border:1px solid #ccc;">0.6096 tCO₂/MWh</td><td style="padding:5px 8px;border:1px solid #ccc;">GB/T 2589-2020 / 全国平均电力排放因子</td></tr>
                                 <tr><td style="padding:5px 8px;border:1px solid #ccc;">天然气</td><td style="padding:5px 8px;border:1px solid #ccc;">13.3 tce/万m³</td><td style="padding:5px 8px;border:1px solid #ccc;">2.1600 tCO₂/万m³</td><td style="padding:5px 8px;border:1px solid #ccc;">GB/T 2589-2020 / IPCC指南</td></tr>
                                 <tr><td style="padding:5px 8px;border:1px solid #ccc;">汽油</td><td style="padding:5px 8px;border:1px solid #ccc;">1.4714 tce/吨</td><td style="padding:5px 8px;border:1px solid #ccc;">2.9250 tCO₂/吨</td><td style="padding:5px 8px;border:1px solid #ccc;">GB/T 2589-2020 / IPCC指南</td></tr>
                             </tbody>
@@ -5058,7 +5058,7 @@ function exportCSV() {
                         <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;">
                             <thead><tr style="background:#065f46;color:white;"><th style="padding:8px;border:1px solid #064e3b;">能源类型</th><th style="padding:8px;border:1px solid #064e3b;">排放因子</th><th style="padding:8px;border:1px solid #064e3b;">单位</th><th style="padding:8px;border:1px solid #064e3b;">来源说明</th></tr></thead>
                             <tbody>
-                                <tr><td style="padding:6px 8px;border:1px solid #999;">购入电力</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;">0.5810</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">tCO₂/MWh</td><td style="padding:6px 8px;border:1px solid #999;">2022年度东北区域电网基准线排放因子（生态环境部）</td></tr>
+                                <tr><td style="padding:6px 8px;border:1px solid #999;">购入电力</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;">0.6096</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">tCO₂/MWh</td><td style="padding:6px 8px;border:1px solid #999;">全国电力平均CO₂排放因子（不含市场化交易非化石能源电量，生态环境部/国家统计局2023年度发布）</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">天然气</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;">2.1600</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">tCO₂/万m³</td><td style="padding:6px 8px;border:1px solid #999;">《中国温室气体清单研究》/ IPCC 2006指南</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">汽油</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;">2.9250</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">tCO₂/吨</td><td style="padding:6px 8px;border:1px solid #999;">《陆上交通运输企业温室气体排放核算方法》</td></tr>
                                 <tr style="background:#f0fdf4;"><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">光伏绿电</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;color:#16a34a;">0</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;">tCO₂/MWh</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">可再生能源电力，零碳排放，按政策抵扣</td></tr>
@@ -5289,7 +5289,7 @@ function exportCSV() {
         }
 
         // 数据版本号（修改默认数据时需递增，强制清除旧缓存）
-        const DATA_VERSION = '20251012_realData_v3';
+        const DATA_VERSION = '20251030_factor06096_v4';
 
         // 加载数据：云端发布数据(data.json)优先，本地草稿兜底
         function loadData() {

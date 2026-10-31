@@ -1909,8 +1909,8 @@
                                 <span class="font-medium text-orange-600 dark:text-orange-400" id="cf-naturalGas">0.00 tCO₂</span>
                             </div>
                             <div class="flex justify-between py-1 border-b border-gray-100 dark:border-gray-700">
-                                <span class="text-green-600 dark:text-green-400">光伏绿电抵扣</span>
-                                <span class="font-medium text-green-600" id="cf-solar">-0.00 tCO₂</span>
+                                <span class="text-green-600 dark:text-green-400">光伏绿电（减排贡献，不抵扣）</span>
+                                <span class="font-medium text-green-600" id="cf-solar">0.00 tCO₂</span>
                             </div>
                             <div class="flex justify-between pt-2">
                                 <span class="font-semibold text-gray-800 dark:text-white">阶段小计</span>
@@ -3761,7 +3761,7 @@ function exportCSV() {
             const buyAmount = summary.gridPower * CARBON_FACTORS.gridPower;
             const buyValue = buyAmount * 58.1; // 按58.1元/tCO₂计算
             
-            // 光伏绿电减排量 = 光伏电力 × 碳排放因子 (相当于卖出CCER)
+            // 光伏绿电减排量 = 光伏电力 × 碳排放因子（减排贡献，不抵扣、单独披露）
             const sellAmount = summary.greenReduction;
             const sellValue = sellAmount * 58.1;
             
@@ -4437,8 +4437,8 @@ function exportCSV() {
             const c_elec = (summary.gridPower || 0) * CARBON_FACTORS.gridPower;
             // 2. 天然气直接燃烧排放（Scope 1）
             const c_naturalGas = (summary.naturalGas || 0) * CARBON_FACTORS.naturalGas;
-            // 3. 光伏绿电抵扣（零排放）
-            const c_solar = -(summary.solarPower || 0) * CARBON_FACTORS.gridPower;
+            // 3. 光伏绿电：零碳电力，不计入外购电力、不抵扣（减排贡献单独披露，避免重复扣减）
+            const c_solar = 0;
             const c_prodTotal = c_elec + c_naturalGas + c_solar;
 
             // ===== 汇总 =====
@@ -4536,7 +4536,7 @@ function exportCSV() {
             setVal('cf-elec', cf.production.electricity);
             setVal('cf-naturalGas', cf.production.naturalGas);
             const solarEl = document.getElementById('cf-solar');
-            if (solarEl) solarEl.textContent = cf.production.solar.toFixed(2) + ' tCO₂';
+            if (solarEl) solarEl.textContent = cf.greenReduction.toFixed(2) + ' tCO₂';
             setVal('cf-prodTotal', cf.production.total);
             const prodPct = total > 0 ? cf.production.total / total * 100 : 0;
             const prodPctEl = document.getElementById('cf-prodPercent');
@@ -4551,7 +4551,7 @@ function exportCSV() {
             const oldProdRatio = document.getElementById('footprint-productionRatio');
             if (oldProdRatio) oldProdRatio.textContent = prodPct.toFixed(1) + '%';
             const oldGreenRatio = document.getElementById('footprint-greenRatio');
-            const greenRatioPct = cf.production.electricity > 0 ? Math.abs(cf.production.solar) / cf.production.electricity * 100 : 0;
+            const greenRatioPct = summary.solarPower > 0 ? summary.solarPower / (summary.gridPower + summary.solarPower) * 100 : 0;
             if (oldGreenRatio) oldGreenRatio.textContent = greenRatioPct.toFixed(1) + '%';
         }
 
@@ -4598,7 +4598,7 @@ function exportCSV() {
             const barEl = document.getElementById('cfHotspotBarChart');
             if (barEl) {
                 if (charts.cfHotspotBar) charts.cfHotspotBar.destroy();
-                const labels = ['玻璃原片', '辅助材料', '包装材料', '原片运输', '辅材运输', '运输汽油', '购入电力', '天然气燃烧', '绿电抵扣'];
+                const labels = ['玻璃原片', '辅助材料', '包装材料', '原片运输', '辅材运输', '运输汽油', '购入电力', '天然气燃烧', '光伏绿电减排贡献（不抵扣）'];
                 const data = [
                     cf.rawMaterial.rawGlass,
                     cf.rawMaterial.auxMaterial,
@@ -4608,7 +4608,7 @@ function exportCSV() {
                     cf.transport.gasoline,
                     cf.production.electricity,
                     cf.production.naturalGas,
-                    cf.production.solar
+                    cf.greenReduction
                 ];
                 const colors = ['#2563eb','#3b82f6','#60a5fa','#ea580c','#fb923c','#9333ea','#dc2626','#f97316','#16a34a'];
                 charts.cfHotspotBar = new Chart(barEl, {
@@ -4729,7 +4729,7 @@ function exportCSV() {
                             <tbody>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">原材料获取阶段</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;font-weight:bold;">✓ 包含</td><td style="padding:6px 8px;border:1px solid #999;">外购玻璃原片生产排放、PVB胶片、铝间隔条、密封胶、包装材料等辅材排放</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">原材料运输阶段</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;font-weight:bold;">✓ 包含</td><td style="padding:6px 8px;border:1px solid #999;">原片及辅材从供应商运至本厂的公路运输排放、厂外运输车辆汽油消耗</td></tr>
-                                <tr><td style="padding:6px 8px;border:1px solid #999;">深加工生产阶段</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;font-weight:bold;">✓ 包含</td><td style="padding:6px 8px;border:1px solid #999;">本厂切割、磨边、钢化、夹胶、中空等工序电力消耗、天然气直接燃烧排放（含光伏绿电抵扣）</td></tr>
+                                <tr><td style="padding:6px 8px;border:1px solid #999;">深加工生产阶段</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;font-weight:bold;">✓ 包含</td><td style="padding:6px 8px;border:1px solid #999;">本厂切割、磨边、钢化、夹胶、中空等工序电力消耗、天然气直接燃烧排放（光伏绿电减排贡献单独披露、不抵扣）</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">产品分销运输</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#dc2626;font-weight:bold;">✗ 不含</td><td style="padding:6px 8px;border:1px solid #999;">属于B2B模式下的下游阶段，由下游客户运输方式决定，不在本次核算边界内</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">产品使用阶段</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#dc2626;font-weight:bold;">✗ 不含</td><td style="padding:6px 8px;border:1px solid #999;">深加工玻璃为建筑/工业中间产品，使用阶段无能源消耗</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">废弃处置阶段</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#dc2626;font-weight:bold;">✗ 不含</td><td style="padding:6px 8px;border:1px solid #999;">从摇篮到大门边界不包含废弃阶段</td></tr>
@@ -4775,7 +4775,7 @@ function exportCSV() {
                             <tbody>
                                 <tr><td style="padding:5px 8px;border:1px solid #ccc;">购入电力</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;">${totalGridPower} MWh</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;">${CARBON_FACTORS.gridPower.toFixed(3)} tCO₂/MWh</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;font-weight:bold;">${cf.production.electricity.toFixed(2)} tCO₂</td><td style="padding:5px 8px;border:1px solid #ccc;">Scope 2 东北电网</td></tr>
                                 <tr><td style="padding:5px 8px;border:1px solid #ccc;">天然气</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;">${(p.naturalGas || 0).toFixed(2)} 万m³</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;">${CARBON_FACTORS.naturalGas.toFixed(3)} tCO₂/万m³</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;font-weight:bold;">${cf.production.naturalGas.toFixed(2)} tCO₂</td><td style="padding:5px 8px;border:1px solid #ccc;">Scope 1 生产直接燃烧</td></tr>
-                                <tr style="background:#f0fdf4;"><td style="padding:5px 8px;border:1px solid #ccc;color:#16a34a;">光伏发电（绿电抵扣）</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;color:#16a34a;">${totalSolarPower} MWh</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;color:#16a34a;">0 tCO₂/MWh</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;font-weight:bold;color:#16a34a;">${cf.production.solar.toFixed(2)} tCO₂</td><td style="padding:5px 8px;border:1px solid #ccc;color:#16a34a;">零碳电力抵扣</td></tr>
+                                <tr style="background:#f0fdf4;"><td style="padding:5px 8px;border:1px solid #ccc;color:#16a34a;">光伏发电（减排贡献）</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;color:#16a34a;">${totalSolarPower} MWh</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;color:#16a34a;">0 tCO₂/MWh</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:right;font-weight:bold;color:#16a34a;">0.00 tCO₂</td><td style="padding:5px 8px;border:1px solid #ccc;color:#16a34a;">零碳电力，减排贡献${cf.greenReduction.toFixed(2)} tCO₂（不抵扣，单独披露）</td></tr>
                             </tbody>
                         </table>
                         <p style="margin:6px 0;font-weight:bold;">6.3 运输清单</p>
@@ -4798,7 +4798,7 @@ function exportCSV() {
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">原材料阶段</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;font-weight:bold;">${cf.rawMaterial.total.toFixed(2)}</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">${rawPct}%</td><td style="padding:6px 8px;border:1px solid #999;">外购玻璃原片生产（熔制工序）为最大排放源</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">运输阶段</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;font-weight:bold;">${cf.transport.total.toFixed(2)}</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">${transPct}%</td><td style="padding:6px 8px;border:1px solid #999;">原片公路运输、厂外运输汽油消耗</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">深加工生产阶段</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;font-weight:bold;">${cf.production.total.toFixed(2)}</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">${prodPct}%</td><td style="padding:6px 8px;border:1px solid #999;">购入电力消耗（钢化炉、切割机等）、天然气直接燃烧</td></tr>
-                                <tr style="background:#fef2f2;font-weight:bold;"><td style="padding:8px;border:1px solid #999;font-size:12px;">合计（从摇篮到大门）</td><td style="padding:8px;border:1px solid #999;text-align:right;color:#dc2626;font-size:12px;">${cf.total.toFixed(2)}</td><td style="padding:8px;border:1px solid #999;text-align:center;color:#dc2626;">100%</td><td style="padding:8px;border:1px solid #999;color:#dc2626;">绿电减排 ${cf.greenReduction.toFixed(2)} tCO₂e，天然气排放 ${cf.production.naturalGas.toFixed(2)} tCO₂，汽油排放 ${cf.transport.gasoline.toFixed(2)} tCO₂</td></tr>
+                                <tr style="background:#fef2f2;font-weight:bold;"><td style="padding:8px;border:1px solid #999;font-size:12px;">合计（从摇篮到大门）</td><td style="padding:8px;border:1px solid #999;text-align:right;color:#dc2626;font-size:12px;">${cf.total.toFixed(2)}</td><td style="padding:8px;border:1px solid #999;text-align:center;color:#dc2626;">100%</td><td style="padding:8px;border:1px solid #999;color:#dc2626;">光伏绿电减排贡献 ${cf.greenReduction.toFixed(2)} tCO₂e（不抵扣、单独披露），天然气排放 ${cf.production.naturalGas.toFixed(2)} tCO₂，汽油排放 ${cf.transport.gasoline.toFixed(2)} tCO₂</td></tr>
                             </tbody>
                         </table>
 
@@ -4899,7 +4899,7 @@ function exportCSV() {
                             <tr><td style="padding:8px;border:1px solid #999;width:20%;background:#f3f4f6;font-weight:600;">企业名称</td><td style="padding:8px;border:1px solid #999;width:30%;">沈阳市辽河特种玻璃厂</td><td style="padding:8px;border:1px solid #999;width:20%;background:#f3f4f6;font-weight:600;">统一社会信用代码</td><td style="padding:8px;border:1px solid #999;width:30%;">9121012211826937M</td></tr>
                             <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">所属行业</td><td style="padding:8px;border:1px solid #999;">非金属矿物制品业（玻璃深加工）</td><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">主要产品</td><td style="padding:8px;border:1px solid #999;">钢化玻璃、中空玻璃、夹胶玻璃</td></tr>
                             <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">报告年度</td><td style="padding:8px;border:1px solid #999;">2025年度</td><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">能源管理体系</td><td style="padding:8px;border:1px solid #999;color:#16a34a;font-weight:600;">已认证通过</td></tr>
-                            <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">年度总产量</td><td style="padding:8px;border:1px solid #999;">${summary.output.toLocaleString()} 万㎡</td><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">年度工业总产值</td><td style="padding:8px;border:1px solid #999;">${summary.value.toFixed(2)} 万元</td></tr>
+                            <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">年度总产量</td><td style="padding:8px;border:1px solid #999;">${(summary.output/10000).toFixed(2)} 万㎡</td><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">年度工业总产值</td><td style="padding:8px;border:1px solid #999;">${summary.value.toFixed(2)} 万元</td></tr>
                         </table>
 
                         <!-- 2. 能源消费情况 -->
@@ -4934,7 +4934,7 @@ function exportCSV() {
                             <tbody>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">单位产品综合能耗</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;font-weight:600;">${summary.unitProductEnergy.toFixed(4)}</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">tce/万㎡</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">-</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">-</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">单位产值综合能耗</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;font-weight:600;">${summary.unitValueEnergy.toFixed(4)}</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">tce/万元</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">-</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">-</td></tr>
-                                <tr><td style="padding:6px 8px;border:1px solid #999;">单位产品电耗</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;font-weight:600;">${(elecTotal/summary.output).toFixed(4)}</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">MWh/万㎡</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">-</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">-</td></tr>
+                                <tr><td style="padding:6px 8px;border:1px solid #999;">单位产品电耗</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;font-weight:600;">${(elecTotal/(summary.output/10000)).toFixed(4)}</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">MWh/万㎡</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">-</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">-</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">绿电使用比例</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;font-weight:600;color:#16a34a;">${greenElecRatio}%</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">-</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">持续提升</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;">良好</td></tr>
                             </tbody>
                         </table>
@@ -4999,7 +4999,7 @@ function exportCSV() {
                 const scope1 = scope1_naturalGas + scope1_gasoline;
                 const scope2 = summary.gridPower * CARBON_FACTORS.gridPower;
                 const totalGhg = scope1 + scope2;
-                const netEmission = totalGhg - summary.greenReduction;
+                const netEmission = totalGhg; // 方案A：光伏绿电减排不抵扣，净排放=总排放（光伏减排单独披露）
                 const elecTotal = summary.gridPower + summary.solarPower;
                 const greenElecRatio = elecTotal > 0 ? (summary.solarPower / elecTotal * 100).toFixed(1) : '0.0';
                 
@@ -5026,7 +5026,7 @@ function exportCSV() {
                             <tr><td style="padding:8px;border:1px solid #999;width:20%;background:#f3f4f6;font-weight:600;">企业名称</td><td style="padding:8px;border:1px solid #999;width:30%;">沈阳市辽河特种玻璃厂</td><td style="padding:8px;border:1px solid #999;width:20%;background:#f3f4f6;font-weight:600;">统一社会信用代码</td><td style="padding:8px;border:1px solid #999;width:30%;">9121012211826937M</td></tr>
                             <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">法定代表人</td><td style="padding:8px;border:1px solid #999;">-</td><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">所属行业</td><td style="padding:8px;border:1px solid #999;">非金属矿物制品业（C30）</td></tr>
                             <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">报告年度</td><td style="padding:8px;border:1px solid #999;">2025年</td><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">核算边界</td><td style="padding:8px;border:1px solid #999;">法人边界：沈阳市辽河特种玻璃厂</td></tr>
-                            <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">主要产品</td><td style="padding:8px;border:1px solid #999;">钢化玻璃、中空玻璃、夹胶玻璃</td><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">年度总产量</td><td style="padding:8px;border:1px solid #999;">${summary.output.toLocaleString()} 万㎡</td></tr>
+                            <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">主要产品</td><td style="padding:8px;border:1px solid #999;">钢化玻璃、中空玻璃、夹胶玻璃</td><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">年度总产量</td><td style="padding:8px;border:1px solid #999;">${(summary.output/10000).toFixed(2)} 万㎡</td></tr>
                             <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">年度工业总产值</td><td style="padding:8px;border:1px solid #999;">${summary.value.toFixed(2)} 万元</td><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">温室气体管理体系</td><td style="padding:8px;border:1px solid #999;color:#16a34a;font-weight:600;">ISO 14064 建立中</td></tr>
                         </table>
 
@@ -5041,7 +5041,7 @@ function exportCSV() {
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">化石燃料燃烧排放</td><td style="padding:6px 8px;border:1px solid #999;">Scope 1</td><td style="padding:6px 8px;border:1px solid #999;">生产工艺天然气燃烧</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">CO₂</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#dc2626;font-weight:600;">是</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">移动源燃烧排放</td><td style="padding:6px 8px;border:1px solid #999;">Scope 1</td><td style="padding:6px 8px;border:1px solid #999;">厂外运输车辆汽油消耗</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">CO₂</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#dc2626;font-weight:600;">是</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">购入电力排放</td><td style="padding:6px 8px;border:1px solid #999;">Scope 2</td><td style="padding:6px 8px;border:1px solid #999;">从电网购入的电力</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">CO₂</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#dc2626;font-weight:600;">是</td></tr>
-                                <tr style="background:#f0fdf4;"><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">可再生能源抵扣</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">-</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">自有光伏发电（绿电）</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;">CO₂</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;font-weight:600;">抵扣项</td></tr>
+                                <tr style="background:#f0fdf4;"><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">可再生能源利用</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">-</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">自有光伏发电（绿电）</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;">CO₂</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;font-weight:600;">不抵扣，单独披露</td></tr>
                             </tbody>
                         </table>
 
@@ -5065,7 +5065,7 @@ function exportCSV() {
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">购入电力</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;">0.6096</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">tCO₂/MWh</td><td style="padding:6px 8px;border:1px solid #999;">全国电力平均CO₂排放因子（不含市场化交易非化石能源电量，生态环境部/国家统计局2023年度发布）</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">天然气</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;">2.1600</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">tCO₂/万m³</td><td style="padding:6px 8px;border:1px solid #999;">《中国温室气体清单研究》/ IPCC 2006指南</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #999;">汽油</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;">2.9250</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;">tCO₂/吨</td><td style="padding:6px 8px;border:1px solid #999;">《陆上交通运输企业温室气体排放核算方法》</td></tr>
-                                <tr style="background:#f0fdf4;"><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">光伏绿电</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;color:#16a34a;">0</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;">tCO₂/MWh</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">可再生能源电力，零碳排放，按政策抵扣</td></tr>
+                                <tr style="background:#f0fdf4;"><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">光伏绿电</td><td style="padding:6px 8px;border:1px solid #999;text-align:right;color:#16a34a;">0</td><td style="padding:6px 8px;border:1px solid #999;text-align:center;color:#16a34a;">tCO₂/MWh</td><td style="padding:6px 8px;border:1px solid #999;color:#16a34a;">可再生能源电力，零碳排放（自发自用不计入外购电力，减排贡献单独披露、不抵扣）</td></tr>
                             </tbody>
                         </table>
 
@@ -5078,8 +5078,7 @@ function exportCSV() {
                                 <tr><td style="padding:6px 8px;border:1px solid #ccc;">厂外运输汽油</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;">${(summary.gasoline||0).toFixed(2)} 吨</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;">${CARBON_FACTORS.gasoline.toFixed(3)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;font-weight:600;">${scope1_gasoline.toFixed(2)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;">${(scope1_gasoline/totalGhg*100).toFixed(1)}%</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #ccc;">Scope 2<br>间接排放</td><td style="padding:6px 8px;border:1px solid #ccc;">净购入电力</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;">${summary.gridPower.toFixed(2)} MWh</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;">${CARBON_FACTORS.gridPower.toFixed(4)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;font-weight:600;">${scope2.toFixed(2)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;">${(scope2/totalGhg*100).toFixed(1)}%</td></tr>
                                 <tr style="background:#fef3c7;"><td style="padding:6px 8px;border:1px solid #ccc;font-weight:bold;" colspan="4">总排放量（Gross Emissions）</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;font-weight:bold;color:#dc2626;">${totalGhg.toFixed(2)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;font-weight:bold;">100.0%</td></tr>
-                                <tr style="background:#dcfce7;"><td style="padding:6px 8px;border:1px solid #ccc;color:#16a34a;" colspan="4">减：光伏绿电抵扣减排量</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;color:#16a34a;font-weight:600;">-${summary.greenReduction.toFixed(2)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;color:#16a34a;">${greenElecRatio}%绿电</td></tr>
-                                <tr style="background:#fee2e2;"><td style="padding:8px;border:1px solid #999;font-weight:bold;" colspan="4">净排放量（Net Emissions）</td><td style="padding:8px;border:1px solid #999;text-align:right;font-weight:bold;color:#b91c1c;">${netEmission.toFixed(2)}</td><td style="padding:8px;border:1px solid #999;text-align:center;font-weight:bold;">tCO₂</td></tr>
+                                <tr style="background:#dcfce7;"><td style="padding:6px 8px;border:1px solid #ccc;color:#16a34a;" colspan="4">光伏绿电减排贡献（不抵扣，单独披露）</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;color:#16a34a;font-weight:600;">${summary.greenReduction.toFixed(2)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;color:#16a34a;">${greenElecRatio}%绿电</td></tr>
                             </tbody>
                         </table>
 
@@ -5089,15 +5088,14 @@ function exportCSV() {
                             <tr><td style="padding:8px;border:1px solid #999;width:40%;background:#f3f4f6;font-weight:600;">Scope 1 直接排放（化石燃料燃烧）</td><td style="padding:8px;border:1px solid #999;font-weight:600;">${scope1.toFixed(2)} tCO₂</td></tr>
                             <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">Scope 2 间接排放（购入电力）</td><td style="padding:8px;border:1px solid #999;font-weight:600;">${scope2.toFixed(2)} tCO₂</td></tr>
                             <tr><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;">温室气体总排放量（Gross）</td><td style="padding:8px;border:1px solid #999;font-weight:600;color:#dc2626;">${totalGhg.toFixed(2)} tCO₂</td></tr>
-                            <tr style="background:#f0fdf4;"><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;color:#16a34a;">光伏绿电减排抵扣</td><td style="padding:8px;border:1px solid #999;font-weight:600;color:#16a34a;">${summary.greenReduction.toFixed(2)} tCO₂（绿电占比${greenElecRatio}%）</td></tr>
-                            <tr style="background:#fff7ed;"><td style="padding:8px;border:1px solid #999;font-weight:600;">温室气体净排放量</td><td style="padding:8px;border:1px solid #999;font-weight:bold;color:#ea580c;">${netEmission.toFixed(2)} tCO₂</td></tr>
+                            <tr style="background:#f0fdf4;"><td style="padding:8px;border:1px solid #999;background:#f3f4f6;font-weight:600;color:#16a34a;">光伏绿电减排贡献（不抵扣，单独披露）</td><td style="padding:8px;border:1px solid #999;font-weight:600;color:#16a34a;">${summary.greenReduction.toFixed(2)} tCO₂（绿电占比${greenElecRatio}%）</td></tr>
                         </table>
                         <p style="margin:10px 0 6px 0;font-weight:bold;">碳绩效指标</p>
                         <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px;">
                             <thead><tr style="background:#4b5563;color:white;"><th style="padding:8px;border:1px solid #555;">指标名称</th><th style="padding:8px;border:1px solid #555;">数值</th><th style="padding:8px;border:1px solid #555;">单位</th><th style="padding:8px;border:1px solid #555;">说明</th></tr></thead>
                             <tbody>
-                                <tr><td style="padding:6px 8px;border:1px solid #ccc;">单位产品碳排放</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;font-weight:600;">${(netEmission/summary.output).toFixed(4)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;">tCO₂/万㎡</td><td style="padding:6px 8px;border:1px solid #ccc;">净排放量除以总产量</td></tr>
-                                <tr><td style="padding:6px 8px;border:1px solid #ccc;">单位产值碳排放</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;font-weight:600;">${(netEmission/summary.value).toFixed(4)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;">tCO₂/万元</td><td style="padding:6px 8px;border:1px solid #ccc;">净排放量除以总产值</td></tr>
+                                <tr><td style="padding:6px 8px;border:1px solid #ccc;">单位产品碳排放</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;font-weight:600;">${(totalGhg/(summary.output/10000)).toFixed(4)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;">tCO₂/万㎡</td><td style="padding:6px 8px;border:1px solid #ccc;">排放总量除以总产量（万㎡）</td></tr>
+                                <tr><td style="padding:6px 8px;border:1px solid #ccc;">单位产值碳排放</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;font-weight:600;">${(totalGhg/summary.value).toFixed(4)}</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;">tCO₂/万元</td><td style="padding:6px 8px;border:1px solid #ccc;">排放总量除以总产值</td></tr>
                                 <tr><td style="padding:6px 8px;border:1px solid #ccc;">Scope 1排放占比</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;font-weight:600;">${(scope1/totalGhg*100).toFixed(1)}%</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;">-</td><td style="padding:6px 8px;border:1px solid #ccc;">直接排放占总排放比例</td></tr>
                                 <tr style="background:#f0fdf4;"><td style="padding:6px 8px;border:1px solid #ccc;color:#16a34a;">绿电减排贡献率</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:right;font-weight:600;color:#16a34a;">${(summary.greenReduction/totalGhg*100).toFixed(1)}%</td><td style="padding:6px 8px;border:1px solid #ccc;text-align:center;color:#16a34a;">-</td><td style="padding:6px 8px;border:1px solid #ccc;color:#16a34a;">绿电减排量占总排放比例</td></tr>
                             </tbody>
@@ -5134,7 +5132,7 @@ function exportCSV() {
                             </tbody>
                         </table>
                         <p style="margin:10px 0 6px 0;"><strong>8.2 结论：</strong></p>
-                        <p style="font-size:11px;color:#444;text-indent:2em;line-height:1.9;">2025年度，沈阳市辽河特种玻璃厂温室气体排放总量为${totalGhg.toFixed(2)} tCO₂，其中Scope 1直接排放${scope1.toFixed(2)} tCO₂（占比${(scope1/totalGhg*100).toFixed(1)}%），Scope 2间接排放${scope2.toFixed(2)} tCO₂（占比${(scope2/totalGhg*100).toFixed(1)}%）；扣除自有光伏发电减排${summary.greenReduction.toFixed(2)} tCO₂后，净排放量为${netEmission.toFixed(2)} tCO₂。单位产品碳排放为${(netEmission/summary.output).toFixed(4)} tCO₂/万㎡，绿电占总用电量比例为${greenElecRatio}%。企业通过可再生能源利用实现了显著的碳减排成效。</p>
+                        <p style="font-size:11px;color:#444;text-indent:2em;line-height:1.9;">2025年度，沈阳市辽河特种玻璃厂温室气体排放总量为${totalGhg.toFixed(2)} tCO₂，其中Scope 1直接排放${scope1.toFixed(2)} tCO₂（占比${(scope1/totalGhg*100).toFixed(1)}%），Scope 2间接排放${scope2.toFixed(2)} tCO₂（占比${(scope2/totalGhg*100).toFixed(1)}%）。自有光伏发电减排贡献${summary.greenReduction.toFixed(2)} tCO₂（绿电占比${greenElecRatio}%，不抵扣、单独披露）。单位产品碳排放为${(totalGhg/(summary.output/10000)).toFixed(4)} tCO₂/万㎡，绿电占总用电量比例为${greenElecRatio}%。企业通过可再生能源利用实现了显著的碳减排成效。</p>
 
                         <div style="margin-top:30px;padding-top:12px;border-top:1px solid #ccc;text-align:center;">
                             <p style="font-size:10px;color:#999;margin:0;">—— 报告结束 ——</p>

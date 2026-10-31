@@ -10,7 +10,8 @@
     <link rel="icon" type="image/png" href="icons/icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -104,6 +105,9 @@
             /* 隐藏按钮 */
             .print-only button { display: none !important; }
         }
+    
+        /* 报告文字统一加深：打印与导出PDF共用（html2canvas 克隆同样生效） */
+        .print-only, .print-only * { color: #111827 !important; }
     
         /* ======== 11.0 工业风主题 ======== */
         /* 全局：深色工业背景 + 网格纹理 */
@@ -5181,7 +5185,7 @@ function exportCSV() {
         }
         
         // 导出PDF
-        function exportPDF(type) {
+        async function exportPDF(type) {
             const reportNames = {
                 'carbonFootprint': '产品碳足迹报告',
                 'energy': '能源利用状况报告',
@@ -5194,41 +5198,102 @@ function exportCSV() {
                 return;
             }
             
-            // html2pdf 未加载（离线/弱网）时降级为浏览器打印，可另存为 PDF
-            if (typeof html2pdf === 'undefined') {
+            // html2canvas/jsPDF 未加载（离线/弱网）时降级为浏览器打印，可另存为 PDF
+            if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
                 alert('PDF组件未加载（可能网络原因），已改用浏览器打印：请在打印对话框选择"另存为PDF"。');
                 printReport();
                 return;
             }
             
-            // 直接从报告源元素渲染（html2pdf 内部克隆），不用离屏容器，避免渲染空白
-            const opt = {
-                margin: [10, 10, 12, 10],
-                filename: `沈阳市辽河特种玻璃厂_${reportNames[type]}.pdf`,
-                image: { type: 'png', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    backgroundColor: '#ffffff',
-                    windowWidth: 794,
-                    onclone: (doc) => {
-                        // 克隆副本里移除操作按钮，不碰源元素
-                        doc.querySelectorAll('.print-content button').forEach(b => b.remove());
+            // 复用打印克隆容器渲染（与打印预览同一渲染源），再做 DOM 级分页后逐页渲染，
+            // 保证分页线落在内容块/文字行之间，不再出现跨页截断文字
+            let printOnly = document.getElementById('printOnly');
+            if (printOnly) printOnly.remove();
+            printOnly = document.createElement('div');
+            printOnly.id = 'printOnly';
+            printOnly.className = 'print-only';
+            printOnly.innerHTML = element.innerHTML;
+            document.body.appendChild(printOnly);
+
+            const now = new Date();
+            const stamp = now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
+            const filename = `沈阳市辽河特种玻璃厂_${reportNames[type]}_${stamp}.pdf`;
+
+            // —— DOM 级分页：页容器 A4(794×1123px) + 内边距(10mm/12mm)，内容可用高 1040px ——
+            const PAGE_W = 794, PAGE_H = 1123, PAD_T = 38, PAD_B = 45, INNER_H = PAGE_H - PAD_T - PAD_B;
+            const pageStyle = 'width:794px;height:1123px;box-sizing:border-box;padding:38px 38px 45px;background:#ffffff;';
+            const pages = [];
+            let cur = null, used = 0;
+            Array.prototype.slice.call(printOnly.children).forEach(el => {
+                // 按“外高”（含 margin）累计，避免内容溢出页容器底部
+                const cs = getComputedStyle(el);
+                const h = (el.offsetHeight || 0) + (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0);
+                if (!cur) {
+                    cur = document.createElement('div');
+                    cur.style.cssText = pageStyle;
+                    printOnly.appendChild(cur);
+                    pages.push(cur);
+                    used = 0;
+                }
+                if (used > 0 && used + h > INNER_H) {
+                    cur = document.createElement('div');
+                    cur.style.cssText = pageStyle;
+                    printOnly.appendChild(cur);
+                    pages.push(cur);
+                    used = 0;
+                }
+                cur.appendChild(el);
+                used += h;
+            });
+            if (pages.length === 0) {
+                printOnly.remove();
+                alert('报告内容为空，请先生成报告。');
+                return;
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+                for (let i = 0; i < pages.length; i++) {
+                    const canvas = await html2canvas(pages[i], {
+                        scale: 1.5,
+                        useCORS: true,
+                        logging: false,
+                        backgroundColor: '#ffffff',
+                        windowWidth: 794,
+                        onclone: (doc) => {
+                            // 克隆副本里移除操作按钮，不碰源元素
+                            doc.querySelectorAll('.print-only button').forEach(b => b.remove());
+                        }
+                    });
+                    // 校验渲染结果非空白，避免静默产出空白 PDF（空白则提示改用打印）
+                    if (i === 0) {
+                        try {
+                            const ctx = canvas.getContext('2d');
+                            const px = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                            let nonWhite = 0, total = 0;
+                            for (let k = 0; k < px.length; k += 64) {
+                                total++;
+                                if (px[k] < 245 || px[k + 1] < 245 || px[k + 2] < 245) nonWhite++;
+                            }
+                            if (nonWhite < Math.max(1, total * 0.002)) {
+                                printOnly.remove();
+                                alert('PDF渲染结果为空（浏览器环境限制），请改用"打印报告 → 另存为PDF"，效果一致。');
+                                return;
+                            }
+                        } catch (e) {}
                     }
-                },
-                jsPDF: { 
-                    unit: 'mm', 
-                    format: 'a4', 
-                    orientation: 'portrait' 
-                },
-                pagebreak: { mode: ['css', 'legacy'] }
-            };
-            
-            html2pdf().set(opt).from(element).save().catch(err => {
+                    if (i > 0) pdf.addPage();
+                    // 页容器满幅写入 A4（页内 padding 已提供留白）
+                    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
+                }
+                pdf.save(filename);
+                printOnly.remove();
+            } catch (err) {
+                if (printOnly && printOnly.parentNode) printOnly.remove();
                 console.error('PDF导出失败:', err);
                 alert('PDF导出失败，请改用"打印报告 → 另存为PDF"。');
-            });
+            }
         }
 
         // 发布数据：导出 data.json 文件（上传到 GitHub 仓库根目录后其他人即可看到）

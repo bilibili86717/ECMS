@@ -10,8 +10,8 @@
     <link rel="icon" type="image/png" href="icons/icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -62,6 +62,8 @@
                 margin: 0; 
                 padding: 0;
                 width: 100%;
+                height: auto !important;
+                overflow: visible !important;
             }
             
             /* 隐藏页面上所有非打印内容 */
@@ -69,12 +71,10 @@
                 display: none !important; 
             }
             
-            /* 显示打印专用容器 */
+            /* 显示打印专用容器：普通文档流布局，保证长报告分页正常 */
             .print-only { 
                 display: block !important; 
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
+                position: static !important;
                 width: 100% !important;
                 background: white !important;
                 padding: 0 !important;
@@ -5194,61 +5194,41 @@ function exportCSV() {
                 return;
             }
             
-            // 创建离屏容器用于PDF导出
-            const pdfContainer = document.createElement('div');
-            pdfContainer.style.cssText = `
-                position: fixed;
-                left: 0;
-                top: 0;
-                width: 210mm;
-                min-height: 297mm;
-                padding: 15mm;
-                background: white;
-                font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
-                color: #333;
-                box-sizing: border-box;
-                z-index: 99999;
-            `;
+            // html2pdf 未加载（离线/弱网）时降级为浏览器打印，可另存为 PDF
+            if (typeof html2pdf === 'undefined') {
+                alert('PDF组件未加载（可能网络原因），已改用浏览器打印：请在打印对话框选择"另存为PDF"。');
+                printReport();
+                return;
+            }
             
-            // 复制报告内容
-            pdfContainer.innerHTML = element.innerHTML;
+            // 直接从报告源元素渲染（html2pdf 内部克隆），不用离屏容器，避免渲染空白
+            const opt = {
+                margin: [10, 10, 12, 10],
+                filename: `沈阳市辽河特种玻璃厂_${reportNames[type]}.pdf`,
+                image: { type: 'png', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    windowWidth: 794,
+                    onclone: (doc) => {
+                        // 克隆副本里移除操作按钮，不碰源元素
+                        doc.querySelectorAll('.print-content button').forEach(b => b.remove());
+                    }
+                },
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                },
+                pagebreak: { mode: ['css', 'legacy'] }
+            };
             
-            // 移除按钮
-            const buttons = pdfContainer.querySelectorAll('button');
-            buttons.forEach(btn => btn.remove());
-            
-            document.body.appendChild(pdfContainer);
-            
-            // 等待渲染
-            setTimeout(() => {
-                const opt = {
-                    margin: 0,
-                    filename: `沈阳市辽河特种玻璃厂_${reportNames[type]}.pdf`,
-                    image: { type: 'png', quality: 1 },
-                    html2canvas: { 
-                        scale: 2,
-                        useCORS: true,
-                        logging: false,
-                        backgroundColor: '#ffffff',
-                        width: 794,  // 210mm in 96dpi
-                        windowWidth: 794
-                    },
-                    jsPDF: { 
-                        unit: 'mm', 
-                        format: 'a4', 
-                        orientation: 'portrait' 
-                    },
-                    pagebreak: { mode: 'avoid-all' }
-                };
-                
-                html2pdf().set(opt).from(pdfContainer).save().then(() => {
-                    document.body.removeChild(pdfContainer);
-                }).catch(err => {
-                    console.error('PDF导出失败:', err);
-                    document.body.removeChild(pdfContainer);
-                    alert('PDF导出失败，请重试');
-                });
-            }, 200);
+            html2pdf().set(opt).from(element).save().catch(err => {
+                console.error('PDF导出失败:', err);
+                alert('PDF导出失败，请改用"打印报告 → 另存为PDF"。');
+            });
         }
 
         // 发布数据：导出 data.json 文件（上传到 GitHub 仓库根目录后其他人即可看到）
